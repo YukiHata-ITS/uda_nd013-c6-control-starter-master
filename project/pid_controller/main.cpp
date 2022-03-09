@@ -227,11 +227,11 @@ int main ()
 
   /*  ステアリング角のPID制御オブジェクト生成。係数τ、上限下限の設定  */
   PID pid_steer = PID();
-  pid_steer.Init(0.2, 3.0, 0.004, 1.2, -1.2);                                           /* #003 */
+  pid_steer.Init(0.6, 0.1, 0.00004, 1.2, -1.2);                                           /* #003 */
   /*  スロットル速度のPID制御オブジェクト生成。係数τ、上限下限の設定  */
   PID pid_throttle = PID();
   /*  Kp=0.2, Ki=3.0, Kd=0.004, output_lim_max=1.0, output_lim_min=-1.0  */
-  pid_throttle.Init(0.2, 3.0, 0.004, 1.0, -1.0);                                        /* #002 */
+  pid_throttle.Init(0.2, 0.01, 0.001, 1.0, -1.0);                                        /* #002 */
 
 
   h.onMessage([&pid_steer, &pid_throttle, &new_delta_time, &timer, &prev_timer, &i, &prev_timer](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode)
@@ -319,16 +319,38 @@ int main ()
                                      + std::pow(std::abs(y_position - y_points[y_points.size()-1]),2U)
                                      );
           
-//          double planned_yaw = std::acos((x_position - x_points[x_points.size()-1]) / planned_distance);   /*  正しそうな方  */
-          double planned_yaw = -std::acos(-(x_position - x_points[x_points.size()-1]) / planned_distance);
+          /*  ステアリング角(yaw角)は車進行方向に対して、右が正、左が負  */
+//          double planned_yaw = -std::acos(-(x_position - x_points[x_points.size()-1]) / planned_distance);
+          double x_dist = x_position - x_points[x_points.size()-1];
+          double y_dist = y_position - y_points[y_points.size()-1];
+          double planned_yaw = std::atan(- y_dist / x_dist);
 //          double planned_yaw = angle_between_points(x_points[x_points.size()-1], y_points[x_points.size()-1], x_position, y_position);
-          error_steer = yaw - planned_yaw;                                                              /* #003 */  /*  正しそうな方  */
+//          error_steer = yaw - planned_yaw;                                                              /* #003 */  /*  正しそうな方  */
 //          error_steer = planned_yaw - yaw;                                                              /* #003 */
+          /*  変数yawのみ車進行方向に対して、右が負、左が正  */
+          error_steer = -(yaw - planned_yaw);                                                              /* #003 */
+          if(error_steer >= M_PI/2)
+          {
+            error_steer = M_PI/2;
+          }
+          else if(error_steer <= -M_PI/2)
+          {
+            error_steer = -M_PI/2;
+          }
+//debug          error_steer = 0.2;
+          
           
 	      /*  debug  */
-          cout << "[debug]yaw: " << yaw << endl;
-          cout << "[debug]planned_yaw: " << planned_yaw << endl;
-          cout << "[debug]error_steer: " << error_steer << endl;
+          if(1)
+          {
+            cout << "[debug]yaw: " << yaw << endl;
+            cout << "[debug]planned_yaw: " << planned_yaw << endl;
+            cout << "[debug]error_steer: " << error_steer << endl;
+            cout << "[debug]x_position: " << x_position << endl;
+            cout << "[debug]x_points[x_points.size()-1]: " << x_points[x_points.size()-1] << endl;
+            cout << "[debug]y_position: " << y_position << endl;
+            cout << "[debug]y_points[x_points.size()-1]: " << y_points[y_points.size()-1] << endl;
+          }
 
           /**
           * TODO (step 3): uncomment these lines
@@ -338,6 +360,7 @@ int main ()
           /*  ステアリング角のエラー値更新、エラー合計取得  */                             /* #003 */
           pid_steer.UpdateError(error_steer);
           steer_output = pid_steer.TotalError();
+//debug          steer_output = 0.2;
 
           // Save data
           /*  データ保存  */                                                           /* #003 */

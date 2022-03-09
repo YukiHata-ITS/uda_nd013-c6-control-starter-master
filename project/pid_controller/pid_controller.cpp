@@ -74,4 +74,5 @@ double PID::UpdateDeltaTime(double new_delta_time) {
    * TODO: Update the delta time with new value
    */
     this->delta_time = new_delta_time;
+  	std::cout << "delta_time: " << new_delta_time << endl;
 }
