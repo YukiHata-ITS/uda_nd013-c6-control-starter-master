@@ -46,13 +46,8 @@ double PID::TotalError() {
     double control;
     double cte_diff = this->cte - this->cte_prev;
 //    double control_tmp = -(this->Kpi * this->cte) - (this->Kdi * cte_diff)/this->delta_time - (this->Kii * this->cte_intg)*this->delta_time;
-//    double control_tmp = -(this->Kpi * this->cte) - (this->Kdi * cte_diff) - (this->Kii * this->cte_intg);
-/* P */
-//    double control_tmp = -(this->Kpi * this->cte); //- (this->Kdi * cte_diff)/this->delta_time - (this->Kii * this->cte_intg)*this->delta_time;
-/* PD */
-    double control_tmp = -(this->Kpi * this->cte) - (this->Kdi * cte_diff)/this->delta_time; // - (this->Kii * this->cte_intg)*this->delta_time;
-/* PID */
-//    double control_tmp = -(this->Kpi * this->cte) - (this->Kdi * cte_diff)/this->delta_time - (this->Kii * this->cte_intg)*this->delta_time;
+    double control_tmp = -(this->Kpi * this->cte) - (this->Kdi * cte_diff) - (this->Kii * this->cte_intg);
+//    double control_tmp = -(this->Kpi * this->cte); //make- (this->Kdi * cte_diff)/this->delta_time - (this->Kii * this->cte_intg)*this->delta_time;
 
     if(control_tmp > output_lim_maxi)
     {
@@ -74,5 +69,4 @@ double PID::UpdateDeltaTime(double new_delta_time) {
    * TODO: Update the delta time with new value
    */
     this->delta_time = new_delta_time;
-  	std::cout << "delta_time: " << new_delta_time << endl;
 }
