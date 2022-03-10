@@ -1,7 +1,42 @@
 // Answer the following questions:
 
 // Add the plots to your report and explain them (describe what you see)
+
+I added steer_pid_data__until16s.png and throttle_pid_data__until16s.png.
+First, my car had avoided a collision with first car.
+But after that, my car had crashed to the right wall.
+
+In figure "steer_pid_data__until16s", 
+Steering output changed to cancel Error Steering.
+
+In figure "throttle_pid_data__until16s.png",
+From 0s to 3s, the error throttle dropped sharply as the car accelerated to start.
+After that, car speed changed very slowly to cancel Error Throttle.
+
+
 // What is the effect of the PID according to the plots, how each part of the PID affects the control command?
+PID affects on the amount of the next time control parameters.
+P values is calculated from current error only. 
+Therefore, it has the most impact on the output.
+D values is calculated from difference between current and past error.
+It suppresses sudden changes in output and oscillation. It smooth the plot.
+I values is calculated from cumulative error.
+When PD control converges to a value (bias value) other than 0,
+the effect of that bias value is removed by adding I control.
+
+
 // How would you design a way to automatically tune the PID parameters?
+I use twiggle algorism.
+And I make a script that can run the simulator repeatedly and extract the optimal parameters with the twiggle algorithm.
+
+
 // PID controller is a model free controller, i.e. it does not use a model of the car. Could you explain the pros and cons of this type of controller?
+pros: 
+  A versatile control method that can be used with various models.
+cons:
+  Complex control according to the model is not possible.
+
 // (Optional) What would you do to improve the PID controller?
+
+
+
