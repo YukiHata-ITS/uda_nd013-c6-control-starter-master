@@ -322,12 +322,10 @@ int main ()
           /*  ステアリング角(yaw角)は車進行方向に対して、右が正、左が負  */
 //          double planned_yaw = -std::acos(-(x_position - x_points[x_points.size()-1]) / planned_distance);
 
-          x_idx = x_points.size()-1;                                               /* #011 */
-          y_idx = y_points.size()-1;                                               /* #011 */
+          double x_idx = x_points.size()-1;                                               /* #011 */
+          double y_idx = y_points.size()-1;                                               /* #011 */
 //          x_idx = 0;                                               /* #012 */
 //          y_idx = 0;                                               /* #012 */
-//          double x_dist = x_position - x_points[x_idx];
-//          double y_dist = y_position - y_points[y_idx];
           double x_dist = x_position - x_points[x_idx];
           double y_dist = y_position - y_points[y_idx];
           
