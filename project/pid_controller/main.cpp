@@ -227,10 +227,9 @@ int main ()
 
   /*  ステアリング角のPID制御オブジェクト生成。係数τ、上限下限の設定  */
   PID pid_steer = PID();
-  pid_steer.Init(0.3, 0.01, 0.3, 1.2, -1.2);                                           /* #003 */
+  pid_steer.Init(0.3, 0.05, 0.40, 1.2, -1.2);                                           /* #003 */
   /*  スロットル速度のPID制御オブジェクト生成。係数τ、上限下限の設定  */
   PID pid_throttle = PID();
-  /*  Kp=0.2, Ki=3.0, Kd=0.004, output_lim_max=1.0, output_lim_min=-1.0  */
   pid_throttle.Init(0.2, 0.01, 0.02, 1.0, -1.0);                                        /* #002 */
 
 
@@ -324,13 +323,24 @@ int main ()
 
           double x_idx = x_points.size()-1;                                               /* #011 */
           double y_idx = y_points.size()-1;                                               /* #011 */
-//          x_idx = 0;                                               /* #012 */
-//          y_idx = 0;                                               /* #012 */
+//          double x_idx = 0;                                               /* #012 */
+//          double y_idx = 0;                                               /* #012 */
+//          double x_idx = i;                                               /* #012 */
+//          double y_idx = i;                                               /* #012 */
           double x_dist = x_position - x_points[x_idx];
           double y_dist = y_position - y_points[y_idx];
           
-          double planned_yaw = std::atan(- y_dist / x_dist);
+          double planned_yaw;
+          if(x_dist == 0)
+          {
+            planned_yaw = 0.0;
+          }
+          else
+          {
+            planned_yaw = std::atan(- y_dist / x_dist);
+          }
 //          double planned_yaw = -std::atan2(y_dist, x_dist);                                               /* #010 */
+//          planned_yaw = std::atan2(y_dist, x_dist);                                               /* #010 */
           
           if(planned_yaw >= M_PI/2)
           {
@@ -362,11 +372,13 @@ int main ()
           }
 //debug          error_steer = 0.2;
           
-          
+#if (1)          
 	      /*  debug  */
           if(1)
           {
             cout << "[debug]i: " << i << endl;
+            cout << "x_points.size()-1: " << x_points.size()-1 << endl;
+            cout << "y_points.size()-1: " << y_points.size()-1 << endl;
             cout << "[debug]yaw: " << yaw << endl;
             cout << "[debug]planned_yaw: " << planned_yaw << endl;
             cout << "[debug]error_steer: " << error_steer << endl;
@@ -375,7 +387,44 @@ int main ()
             cout << "[debug]y_position: " << y_position << endl;
             cout << "[debug]y_points[x_points.size()-1]: " << y_points[y_points.size()-1] << endl;
           }
-
+          if(1)
+          {
+            cout << "[debug]x_position: " << x_position << endl;
+            cout << "[debug]x_points[0]: " << x_points[0] << endl;
+            cout << "[debug]x_points[1]: " << x_points[1] << endl;
+            cout << "[debug]x_points[2]: " << x_points[2] << endl;
+            cout << "[debug]x_points[3]: " << x_points[3] << endl;
+            cout << "[debug]x_points[x_points.size()-4]: " << x_points[x_points.size()-4] << endl;
+            cout << "[debug]x_points[x_points.size()-3]: " << x_points[x_points.size()-3] << endl;
+            cout << "[debug]x_points[x_points.size()-2]: " << x_points[x_points.size()-2] << endl;
+            cout << "[debug]x_points[x_points.size()-1]: " << x_points[x_points.size()-1] << endl;
+          }
+          if(1)
+          {
+            cout << "[debug]y_position: " << y_position << endl;
+            cout << "[debug]y_points[0]: " << y_points[0] << endl;
+            cout << "[debug]y_points[1]: " << y_points[1] << endl;
+            cout << "[debug]y_points[2]: " << y_points[2] << endl;
+            cout << "[debug]y_points[3]: " << y_points[3] << endl;
+            cout << "[debug]y_points[x_points.size()-4]: " << y_points[x_points.size()-4] << endl;
+            cout << "[debug]y_points[x_points.size()-3]: " << y_points[x_points.size()-3] << endl;
+            cout << "[debug]y_points[x_points.size()-2]: " << y_points[x_points.size()-2] << endl;
+            cout << "[debug]y_points[x_points.size()-1]: " << y_points[x_points.size()-1] << endl;
+          }
+          if(1)
+          {
+            cout << "[debug]velocity: " << velocity << endl;
+            cout << "[debug]v_points[0]: " << v_points[0] << endl;
+            cout << "[debug]v_points[1]: " << v_points[1] << endl;
+            cout << "[debug]v_points[2]: " << v_points[2] << endl;
+            cout << "[debug]v_points[3]: " << v_points[3] << endl;
+            cout << "[debug]v_points[v_points.size()-4]: " << v_points[v_points.size()-4] << endl;
+            cout << "[debug]v_points[v_points.size()-3]: " << v_points[v_points.size()-3] << endl;
+            cout << "[debug]v_points[v_points.size()-2]: " << v_points[v_points.size()-2] << endl;
+            cout << "[debug]v_points[v_points.size()-1]: " << v_points[v_points.size()-1] << endl;
+          }
+#endif
+          
           /**
           * TODO (step 3): uncomment these lines
           **/
@@ -419,6 +468,7 @@ int main ()
           /*  スロットル速度エラー値の算出  速度差 = 実際 - 目標  */
           error_throttle = (velocity - v_points[v_points.size()-1]);                    /* #002 */
 //          error_throttle = (velocity - v_points[0]);                    /* #002 */
+//          error_throttle = (velocity - v_points[i]);                    /* #002 */
 
           double throttle_output;
           double brake_output;
