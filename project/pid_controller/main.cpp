@@ -227,10 +227,10 @@ int main ()
 
   /*  ステアリング角のPID制御オブジェクト生成。係数τ、上限下限の設定  */
   PID pid_steer = PID();
-  pid_steer.Init(0.3, 0.05, 0.40, 1.2, -1.2);                                           /* #003 */
+  pid_steer.Init(0.03, 0.0001, 0.001, 1.2, -1.2);                                           /* #003 */
   /*  スロットル速度のPID制御オブジェクト生成。係数τ、上限下限の設定  */
   PID pid_throttle = PID();
-  pid_throttle.Init(0.2, 0.01, 0.02, 1.0, -1.0);                                        /* #002 */
+  pid_throttle.Init(0.5, 0.01, 0.02, 1.0, -1.0);                                        /* #002 */
 
 
   h.onMessage([&pid_steer, &pid_throttle, &new_delta_time, &timer, &prev_timer, &i, &prev_timer](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode)
@@ -312,6 +312,7 @@ int main ()
           /**
           * TODO (step 3): compute the steer error (error_steer) from the position and the desired trajectory
           **/
+#if 1
           // 位置と目的の軌道からステアリングエラー（error_steer）を計算します     差 = 実際 - 目標
           double planned_distance = std::sqrt(                                                               /* #003 */
                                        std::pow(std::abs(x_position - x_points[x_points.size()-1]),2U)
@@ -321,10 +322,10 @@ int main ()
           /*  ステアリング角(yaw角)は車進行方向に対して、右が正、左が負  */
 //          double planned_yaw = -std::acos(-(x_position - x_points[x_points.size()-1]) / planned_distance);
 
-          double x_idx = x_points.size()-1;                                               /* #011 */
-          double y_idx = y_points.size()-1;                                               /* #011 */
-//          double x_idx = 0;                                               /* #012 */
-//          double y_idx = 0;                                               /* #012 */
+//          double x_idx = x_points.size()-1;                                               /* #011 */
+//          double y_idx = y_points.size()-1;                                               /* #011 */
+          double x_idx = 0;                                               /* #012 */
+          double y_idx = 0;                                               /* #012 */
 //          double x_idx = i;                                               /* #012 */
 //          double y_idx = i;                                               /* #012 */
           double x_dist = x_position - x_points[x_idx];
@@ -371,6 +372,10 @@ int main ()
             error_steer = -M_PI/2;
           }
 //debug          error_steer = 0.2;
+#endif
+          /*  from QA   */
+//          error_steer = 5 * (y_position - y_points[0]);
+          error_steer = 5 * (y_position - y_points[0]);
           
 #if (1)          
 	      /*  debug  */
@@ -466,9 +471,11 @@ int main ()
           // 位置と要求速度からスロットルエラー（error_throttle）を計算します
           // modify the following line for step 2
           /*  スロットル速度エラー値の算出  速度差 = 実際 - 目標  */
-          error_throttle = (velocity - v_points[v_points.size()-1]);                    /* #002 */
+//          error_throttle = (velocity - v_points[v_points.size()-1]);                    /* #002 */
 //          error_throttle = (velocity - v_points[0]);                    /* #002 */
 //          error_throttle = (velocity - v_points[i]);                    /* #002 */
+          /*  from QA   */
+          error_throttle = velocity - v_points.back();                    /* #013 */
 
           double throttle_output;
           double brake_output;
