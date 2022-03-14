@@ -3,16 +3,15 @@
 // Add the plots to your report and explain them (describe what you see)
 
 I added steer_pid_data__until16s.png and throttle_pid_data__until16s.png.
-First, my car had avoided a collision with first car.
-But after that, my car had crashed to the right wall.
+First, my car avoided a collision with the first car.
+Second, my car sometimes avoided a collision with the first car.
+After that, my car can't go straight
 
-In figure "steer_pid_data__until16s", 
-Steering output changed to cancel Error Steering.
+In figure "steer_pid_data__until16s",
+The steering output had been changed to cancel Error Steering.
 
 In figure "throttle_pid_data__until16s.png",
-From 0s to 3s, the error throttle dropped sharply as the car accelerated to start.
-After that, car speed changed very slowly to cancel Error Throttle.
-
+The steering output has been changed to cancel Error Throttle.
 
 // What is the effect of the PID according to the plots, how each part of the PID affects the control command?
 PID affects on the amount of the next time control parameters.
@@ -34,7 +33,7 @@ And I make a script that can run the simulator repeatedly and extract the optima
 pros: 
   A versatile control method that can be used with various models.
 cons:
-  Complex control according to the model is not possible.
+  Complex control depending on the particular model is not possible.
 
 // (Optional) What would you do to improve the PID controller?
 
