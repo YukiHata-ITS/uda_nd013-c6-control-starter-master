@@ -227,7 +227,8 @@ int main ()
 
   /*  ステアリング角のPID制御オブジェクト生成。係数τ、上限下限の設定  */
   PID pid_steer = PID();
-  pid_steer.Init(0.03, 0.0001, 0.001, 1.2, -1.2);                                           /* #003 */
+//  pid_steer.Init(0.03, 0.0001, 0.001, 1.2, -1.2);                                           /* #003 */
+  pid_steer.Init(0.0350, 0.0, 0.009, 1.2, -1.2);                                         /*  from review  */
   /*  スロットル速度のPID制御オブジェクト生成。係数τ、上限下限の設定  */
   PID pid_throttle = PID();
   pid_throttle.Init(0.5, 0.01, 0.02, 1.0, -1.0);                                        /* #002 */
@@ -411,10 +412,10 @@ int main ()
             cout << "[debug]y_points[1]: " << y_points[1] << endl;
             cout << "[debug]y_points[2]: " << y_points[2] << endl;
             cout << "[debug]y_points[3]: " << y_points[3] << endl;
-            cout << "[debug]y_points[x_points.size()-4]: " << y_points[x_points.size()-4] << endl;
-            cout << "[debug]y_points[x_points.size()-3]: " << y_points[x_points.size()-3] << endl;
-            cout << "[debug]y_points[x_points.size()-2]: " << y_points[x_points.size()-2] << endl;
-            cout << "[debug]y_points[x_points.size()-1]: " << y_points[x_points.size()-1] << endl;
+            cout << "[debug]y_points[y_points.size()-4]: " << y_points[y_points.size()-4] << endl;
+            cout << "[debug]y_points[y_points.size()-3]: " << y_points[y_points.size()-3] << endl;
+            cout << "[debug]y_points[y_points.size()-2]: " << y_points[y_points.size()-2] << endl;
+            cout << "[debug]y_points[y_points.size()-1]: " << y_points[y_points.size()-1] << endl;
           }
           if(1)
           {
